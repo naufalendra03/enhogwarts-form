@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pendaftaran - EnHogwarts</title>
+    <style>
+        @font-face {
+            font-family: 'HarryP';
+            src: url('assets/fonts/HARRYP__.TTF') format('truetype');
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Georgia', serif;
+            background: url('assets/bg-texture.jpg') center/cover repeat;
+            color: #2e1c0d;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+        
+        h1 {
+            font-family: 'HarryP';
+            font-size: 3rem;
+            color: #6a2e2a;
+        }
+        
+        .form-section {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #f7ecce;
+            border: 3px solid #6a2e2a;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .form-section h2 {
+            font-family: 'HarryP';
+            font-size: 2rem;
+            text-align: center;
+            color: #2e442f;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid #6a2e2a;
+            border-radius: 5px;
+            background-color: #fffaf3;
+        }
+        
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background: #d4a017;
+            color: #000;
+            font-weight: bold;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .btn-submit:hover {
+            background: #b98c0a;
+        }
+        
+        .loading-container {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .loading-container img {
+            width: 120px;
+            height: auto;
+            animation: moveBroom 3s linear infinite;
+        }
+        
+        @keyframes moveBroom {
+            0% {
+                transform: translateX(-100px);
+            }
+            50% {
+                transform: translateX(100px);
+            }
+            100% {
+                transform: translateX(-100px);
+            }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 10px;
+            background-color: #2e1c0d;
+            color: #fff;
+            margin-top: 60px;
+        }
+        
+        footer a {
+            color: #d4a017;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Daftar ke EnHogwarts</h1>
+    </header>
+
+    <section class="form-section">
+        <h2>Formulir Pendaftaran</h2>
+        <form id="daftarForm">
+            <div class="form-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" name="nama" required />
+            </div>
+
+            <div class="form-group">
+                <label for="wa">Nomor WhatsApp / HP</label>
+                <input type="tel" id="wa" name="wa" required />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" />
+            </div>
+
+            <div class="form-group">
+                <p style="margin: 8px 0; padding: 10px; border-radius: 5px;">
+                    Silakan transfer ke:<br />
+                    <strong>7206581543 (BSI) a.n. Cut Ade Sukma</strong>
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label for="bukti">Upload Bukti Pembayaran</label>
+                <input type="file" id="bukti" name="bukti" accept="image/*" required />
+            </div>
+
+            <button type="submit" class="btn-submit">Daftar Sekarang</button>
+        </form>
+
+        <div class="loading-container" id="loading">
+            <p>Memproses pendaftaran... 🧹</p>
+            <img src="assets/broom.gif" alt="Loading..." />
+        </div>
+    </section>
+
+    <footer>
+        📍 IAIN Lhokseumawe • 📱 <a href="https://wa.me/YOUR_NUMBER">Hubungi CEO (Acha)</a> • 📸 <a href="https://instagram.com/en_hogwarts">@en_hogwarts</a>
+    </footer>
+
+    <script>
+        const form = document.getElementById("daftarForm");
+        const loading = document.getElementById("loading");
+
+        form.addEventListener("submit", async(e) => {
+            e.preventDefault();
+            loading.style.display = 'block';
+
+            const nama = form.nama.value;
+            const wa = form.wa.value;
+            const email = form.email.value;
+            const kelas = form.kelas.value;
+            const bukti = form.bukti.files[0];
+
+            const reader = new FileReader();
+            reader.onloadend = async() => {
+                const base64 = reader.result.split(",")[1];
+
+                const body = new URLSearchParams({
+                    nama,
+                    wa,
+                    email,
+                    kelas,
+                    buktiBase64: base64
+                });
+
+                try {
+                    const res = await fetch("https://script.google.com/macros/s/AKfycbzDLyLlbnGzTpFgp-SnB-vRrgaR2D114k9bfnt-zEVpLaGmkL_wKKYdHVjEt0LI06giWw/exec", {
+                        method: "POST",
+                        body
+                    });
+
+                    alert(await res.text());
+                    form.reset();
+                    loading.style.display = 'none';
+                } catch (err) {
+                    alert("Gagal mengirim data: " + err.message);
+                    loading.style.display = 'none';
+                }
+            };
+            reader.readAsDataURL(bukti);
+        });
+    </script>
+</body>
+
+</html>
